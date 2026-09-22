@@ -67,3 +67,252 @@
     .stat-value {
       font-size: 18px;
       font-weight: 600;
+      color: #0066cc;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 1rem;
+    }
+    
+    .card {
+      aspect-ratio: 1;
+      background: #0066cc;
+      border: 2px solid #0066cc;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.2s ease;
+      user-select: none;
+      position: relative;
+    }
+    
+    .card:hover:not(.matched):not(.flipped) {
+      background: #0052a3;
+      border-color: #0052a3;
+      transform: translateY(-2px);
+    }
+    
+    .card.flipped {
+      background: white;
+      border-color: #0066cc;
+    }
+    
+    .card.matched {
+      opacity: 0.4;
+      cursor: default;
+    }
+    
+    .actions {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .btn {
+      flex: 1;
+      padding: 0.5rem;
+      background: white;
+      border: 2px solid #0066cc;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #0066cc;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn:hover {
+      background: #e8f0f8;
+      border-color: #0052a3;
+      transform: translateY(-2px);
+    }
+    
+    .btn:active {
+      transform: scale(0.98);
+    }
+    
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+    
+    .modal.show {
+      display: flex;
+    }
+    
+    .modal-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      max-width: 300px;
+      animation: slideUp 0.3s ease;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    }
+    
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .result-emoji {
+      font-size: 48px;
+      margin: 0 0 0.8rem;
+      line-height: 1;
+    }
+    
+    .result-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0066cc;
+      margin: 0 0 0.3rem;
+    }
+    
+    .result-text {
+      font-size: 13px;
+      color: #333;
+      margin: 0;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1 class="header-title">Memory Challenge</h1>
+    <p class="header-subtitle">Find all memory pairs to get your gift<br>Train your memory</p>
+  </div>
+  
+  <div class="game-card">
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-label">Pairs</div>
+        <div class="stat-value"><span id="pairs">0</span>/4</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Moves</div>
+        <div class="stat-value"><span id="moves">0</span></div>
+      </div>
+    </div>
+    
+    <div class="grid" id="grid"></div>
+    
+    <div class="actions">
+      <button class="btn" onclick="resetGame()">Reset</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <div class="result-emoji">🎁</div>
+    <h2 class="result-title">You get your Gift!</h2>
+    <p class="result-text">Congrats! You found all pairs!</p>
+  </div>
+</div>
+
+<script>
+  const items = ['🎂', '🎂', '🎈', '🎈', '🎁', '🎁', '🎉', '🎉'];
+  
+  let state = {
+    cards: [],
+    flipped: [],
+    matched: [],
+    moves: 0,
+    pairs: 0
+  };
+  
+  function shuffle(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+  }
+  
+  function initGame() {
+    state = {
+      cards: shuffle([...items]),
+      flipped: [],
+      matched: [],
+      moves: 0,
+      pairs: 0
+    };
+    renderGrid();
+    updateStats();
+  }
+  
+  function renderGrid() {
+    const grid = document.getElementById('grid');
+    grid.innerHTML = '';
+    state.cards.forEach((card, idx) => {
+      const cardEl = document.createElement('div');
+      cardEl.className = 'card';
+      if (state.flipped.includes(idx)) cardEl.classList.add('flipped');
+      if (state.matched.includes(idx)) cardEl.classList.add('matched');
+      
+      if (state.flipped.includes(idx) || state.matched.includes(idx)) {
+        cardEl.textContent = card;
+      }
+      
+      cardEl.onclick = () => flipCard(idx);
+      grid.appendChild(cardEl);
+    });
+  }
+  
+  function flipCard(idx) {
+    if (state.flipped.length >= 2 || state.matched.includes(idx) || state.flipped.includes(idx)) return;
+    
+    state.flipped.push(idx);
+    renderGrid();
+    
+    if (state.flipped.length === 2) {
+      state.moves++;
+      updateStats();
+      checkMatch();
+    }
+  }
+  
+  function checkMatch() {
+    const [a, b] = state.flipped;
+    if (state.cards[a] === state.cards[b]) {
+      state.matched.push(a, b);
+      state.pairs++;
+      state.flipped = [];
+      updateStats();
+      renderGrid();
+      if (state.pairs === 4) {
+        setTimeout(() => {
+          document.getElementById('modal').classList.add('show');
+        }, 300);
+      }
+    } else {
+      setTimeout(() => {
+        state.flipped = [];
+        renderGrid();
+      }, 800);
+    }
+  }
+  
+  function updateStats() {
+    document.getElementById('pairs').textContent = state.pairs;
+    document.getElementById('moves').textContent = state.moves;
+  }
+  
+  function resetGame() {
+    document.getElementById('modal').classList.remove('show');
+    initGame();
+  }
+  
+  initGame();
+</script>
+
+</body>
+</html>
