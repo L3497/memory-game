@@ -182,8 +182,47 @@
     .result-text {
       font-size: 13px;
       color: #333;
-      margin: 0;
+      margin: 0 0 1.5rem;
       line-height: 1.4;
+    }
+    
+    .voucher-card {
+      background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+      border-radius: 12px;
+      padding: 1.2rem;
+      margin: 1rem 0;
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+      text-align: center;
+      color: white;
+    }
+    
+    .voucher-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin: 0 0 0.8rem;
+      letter-spacing: 0.5px;
+    }
+    
+    .voucher-brands {
+      display: flex;
+      justify-content: space-around;
+      gap: 0.6rem;
+      align-items: center;
+    }
+    
+    .brand {
+      background: white;
+      border-radius: 8px;
+      padding: 0.6rem;
+      flex: 1;
+      font-size: 11px;
+      font-weight: 600;
+      color: #333;
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
     }
   </style>
 </head>
@@ -220,6 +259,15 @@
     <div class="result-emoji">🎁</div>
     <h2 class="result-title">You get your Gift!</h2>
     <p class="result-text">Congrats! You found all pairs!</p>
+    
+    <div class="voucher-card">
+      <div class="voucher-title">Family Gift Voucher</div>
+      <div class="voucher-brands">
+        <div class="brand">Wunsch<br>gutschein</div>
+        <div class="brand">SPORTS<br>CHECK</div>
+        <div class="brand">Intersport</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -296,24 +344,4 @@
       }
     } else {
       setTimeout(() => {
-        state.flipped = [];
-        renderGrid();
-      }, 800);
-    }
-  }
-  
-  function updateStats() {
-    document.getElementById('pairs').textContent = state.pairs;
-    document.getElementById('moves').textContent = state.moves;
-  }
-  
-  function resetGame() {
-    document.getElementById('modal').classList.remove('show');
-    initGame();
-  }
-  
-  initGame();
-</script>
-
-</body>
-</html>
+        state.flipped =
