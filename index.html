@@ -344,4 +344,24 @@
       }
     } else {
       setTimeout(() => {
-        state.flipped =
+        state.flipped = [];
+        renderGrid();
+      }, 800);
+    }
+  }
+  
+  function updateStats() {
+    document.getElementById('pairs').textContent = state.pairs;
+    document.getElementById('moves').textContent = state.moves;
+  }
+  
+  function resetGame() {
+    document.getElementById('modal').classList.remove('show');
+    initGame();
+  }
+  
+  initGame();
+</script>
+
+</body>
+</html>
