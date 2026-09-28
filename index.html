@@ -196,33 +196,56 @@
       color: white;
     }
     
-    .voucher-title {
-      font-size: 14px;
-      font-weight: 700;
-      margin: 0 0 0.8rem;
-      letter-spacing: 0.5px;
-    }
-    
     .voucher-brands {
       display: flex;
-      justify-content: space-around;
-      gap: 0.6rem;
+      flex-direction: column;
+      gap: 0.8rem;
       align-items: center;
+    }
+    
+    .brand-top {
+      background: white;
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      width: 100%;
+      font-size: 13px;
+      font-weight: 600;
+      color: #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .brand-row {
+      display: flex;
+      gap: 0.6rem;
+      width: 100%;
+      justify-content: center;
     }
     
     .brand {
       background: white;
       border-radius: 8px;
-      padding: 0.6rem;
+      padding: 0.8rem;
       flex: 1;
+      max-width: 120px;
       font-size: 11px;
       font-weight: 600;
-      color: #333;
       min-height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
+    }
+    
+    .brand.sportscheck {
+      background: #000;
+      color: white;
+    }
+    
+    .brand.intersport {
+      background: #f47920;
+      color: white;
     }
   </style>
 </head>
@@ -261,11 +284,12 @@
     <p class="result-text">Congrats! You found all pairs!</p>
     
     <div class="voucher-card">
-      <div class="voucher-title">Family Gift Voucher</div>
       <div class="voucher-brands">
-        <div class="brand">Wunsch<br>gutschein</div>
-        <div class="brand">SPORTS<br>CHECK</div>
-        <div class="brand">Intersport</div>
+        <div class="brand-top">Wunschgutschein</div>
+        <div class="brand-row">
+          <div class="brand sportscheck">SPORTSCHECK</div>
+          <div class="brand intersport">Intersport</div>
+        </div>
       </div>
     </div>
   </div>
